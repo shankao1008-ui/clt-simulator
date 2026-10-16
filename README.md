@@ -1,3 +1,58 @@
+# Central Limit Theorem (CLT) Simulator
+
+[**Launch the simulator**](https://shankao1008-ui.github.io/clt-simulator/) · **English / 繁體中文** available using the language selector at the top of the app.
+
+An interactive statistical computing project that explores how sample means approach a normal distribution. The web interface preserves the layout and distribution-specific colors of the original Python desktop GUI. Anyone can use the published simulator in a browser—no installation or sign-in required.
+
+## What you can explore
+
+- Choose from seven populations: Uniform, Student’s t, Chi-square, Beta, Normal, Poisson, and Cauchy.
+- Adjust sample size **n** and the number of repeated samples **N**.
+- Compare a histogram, empirical CDF, normal Q-Q plot, and box plot, alongside simulated and theoretical statistics.
+- Animate increasing sample sizes, explore KS convergence curves, and export charts as PNG, SVG, or PDF via printing.
+- Use a fixed random seed for reproducible simulations. Language changes preserve your settings and results; your language preference is remembered when browser storage is available.
+
+For independent, identically distributed observations with finite mean and variance, the CLT describes how standardized sample means approach a normal distribution as n increases. **Increasing n changes the sampling distribution; increasing N improves the precision of the simulation.** Cauchy is included as a counterexample: its mean and variance are undefined, and its sample means remain Cauchy.
+
+## Use online or locally
+
+**Recommended:** open the [public simulator](https://shankao1008-ui.github.io/clt-simulator/). This works without a local server.
+
+For local development, download or clone this repository, open a terminal in its root folder, and run:
+
+```bash
+python3 -m http.server 8000 --bind 127.0.0.1 --directory docs
+```
+
+Keep that terminal running, then visit `http://localhost:8000/` on the **same computer**. This address is not a public website and will not work when the local server is stopped. Opening the HTML file directly does not support the module-based worker.
+
+## Original Python desktop GUI
+
+```bash
+python3 -m pip install -r requirements.txt
+python3 desktop/clt_gui.py
+```
+
+Requires desktop Python with Tk support. The language selector is a feature of the browser version; the original Python GUI is preserved separately.
+
+## Methods and limitations
+
+All sampling and calculations run in your browser, without uploading sample data. The browser version uses JavaScript random-number generation, so its seed does not produce the same sequence as NumPy. Sample SD uses N−1; skewness and excess kurtosis use uncorrected empirical central moments.
+
+Normal reference curves use the theoretical mean and standard error. The main Cauchy histogram, ECDF, and KS statistic use a standard Cauchy reference; its normal Q-Q plot uses a robust fit based on the median and IQR. Convergence analysis uses N=3000 per setting and compares Cauchy with that robust normal fit. KS distances and fitted slopes are exploratory, not hypothesis-test p-values or guaranteed convergence rates. Heavy tails can make empirical moments unstable; t(3) has no third moment and an infinite fourth moment.
+
+Plots limit the displayed range, but statistics include all observations. Q-Q plots show the 1st–99th percentiles. Chart exports follow the selected language.
+
+## Project structure
+
+- `docs/`: bilingual browser simulator, published with GitHub Pages from `main` → `/docs`.
+- `desktop/`: original Python GUI.
+- `tests/`: numerical and browser checks.
+
+Run numerical checks with `node tests/model.test.mjs`. The web app has no npm dependencies or external CDN requirements.
+
+---
+
 # 中央極限定理 (CLT) 模擬器
 
 依照原始 Tkinter GUI 的排列與配色製作的網頁版：上方控制列、模擬／理論統計表、四張圖及依母體變換的漸層配色。

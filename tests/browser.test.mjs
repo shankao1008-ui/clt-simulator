@@ -16,6 +16,15 @@ await page.selectOption('#preset','30');await complete();
 await page.click('#save');const svgPromise=page.waitForEvent('download');await page.click('#save-svg');const svg=await svgPromise;assert.match(svg.suggestedFilename(),/\.svg$/);assert.ok((await fs.readFile(await svg.path(),'utf8')).includes('<svg'));
 await page.click('#save');const pngPromise=page.waitForEvent('download');await page.click('#save-png');const png=await pngPromise;assert.match(png.suggestedFilename(),/\.png$/);const pngBytes=await fs.readFile(await png.path());assert.equal(pngBytes[0],137);
 await page.click('#converge');await page.waitForFunction(()=>document.getElementById('progress').textContent.startsWith('完成'),{},{timeout:120000});assert.equal(await page.locator('#convergence-plot svg').count(),1);await page.click('#close-dialog');
+const sampleBefore=await page.locator('#stats td').first().innerText();
+await page.selectOption('#language','en');await page.waitForFunction(()=>document.documentElement.lang==='en');
+assert.equal(await page.locator('#stats td').first().innerText(),sampleBefore);
+assert.match(await page.locator('#save').innerText(),/Save charts/);
+await page.reload();await page.waitForFunction(()=>document.getElementById('status').textContent.includes('Simulation complete'));
+assert.equal(await page.locator('#language').inputValue(),'en');
+await page.selectOption('#dist','cauchy');await page.waitForFunction(()=>document.getElementById('result-title').textContent.includes('Cauchy'));
+await page.selectOption('#language','zh');await page.waitForFunction(()=>document.documentElement.lang==='zh-Hant');
+assert.match(await page.locator('#result-title').innerText(),/柯西/);
 await page.evaluate(()=>window.scrollTo(0,0));if(process.env.QA_DIR){await page.screenshot({path:process.env.QA_DIR+'/desktop.png',fullPage:true});}
 await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));if(process.env.QA_DIR){await page.screenshot({path:process.env.QA_DIR+'/mobile.png',fullPage:true});}
 assert.deepEqual(errors,[]);console.log('Original-GUI layout: defaults, seven themes, reproducibility, dropdown presets, autoplay, SVG/PNG downloads, convergence, responsive width and JS errors checked.');await browser.close();
