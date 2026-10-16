@@ -1,0 +1,15 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>中央極限定理 (CLT) 模擬器</title><link rel="icon" href="favicon.svg"><link rel="stylesheet" href="style.css"><script type="module" src="app.mjs"></script></head><body>
+<main class="application">
+<div class="window-title">中央極限定理 (CLT) 模擬器</div>
+<section class="control-panel" aria-label="模擬設定">
+<div class="control-row"><label for="dist">母體分佈:</label><select id="dist"><option value="uniform">均勻分佈 U(0,1)</option><option value="t">t 分佈 t(3)</option><option value="chi" selected>卡方分佈 χ²(2)</option><option value="beta">貝他分佈 β(9,2)</option><option value="normal">常態分佈 N(5,2²)</option><option value="poisson">卜瓦松分佈 Poisson(4)</option><option value="cauchy">柯西分佈 Cauchy（CLT 反例）</option></select><label for="preset">n 預設值:</label><select id="preset"><option>5</option><option>10</option><option selected>30</option><option>50</option><option>100</option><option>300</option><option>500</option><option>1000</option></select><label for="n">樣本大小 (n):</label><div class="scale"><output id="n-value" for="n">30</output><input id="n" type="range" min="1" max="1000" value="30"></div><label for="N">抽樣次數 (N):</label><div class="scale"><output id="N-value" for="N">1000</output><input id="N" type="range" min="100" max="10000" step="100" value="1000"></div></div>
+<div class="button-row"><button id="play">▶ 自動播放 n</button><button id="converge">收斂速度分析</button><button id="save" disabled>儲存圖表</button><label class="check"><input id="fixed" type="checkbox">固定隨機種子（結果可重現）</label><span id="status" role="status" aria-live="polite">準備模擬…</span></div>
+<div class="statistics"><table id="stats" aria-label="模擬與理論統計指標"></table></div><p id="dist-note"></p>
+</section>
+<section id="figure" aria-label="模擬圖表"><h1 id="result-title">中央極限定理 - 卡方分佈 χ²(2) （n=30, N=1000）</h1><div class="charts"><article><h2>直方圖 vs 理論曲線</h2><div id="hist" class="plot"></div></article><article><h2>經驗累積分配函數 (ECDF)</h2><div id="ecdf" class="plot"></div></article><article><h2 id="qq-title">Q-Q 圖（對常態）</h2><div id="qq" class="plot"></div></article><article><h2>盒鬚圖</h2><div id="box" class="plot"></div></article></div></section>
+<p class="footnote"><span id="plot-note"></span><a href="https://github.com/shankao1008-ui/clt-simulator" target="_blank" rel="noopener">GitHub 原始碼</a></p>
+<div hidden><span id="reference-label"></span><span id="run-info"></span><button id="run"></button><button id="reset"></button><button id="csv"></button><div class="presets"></div></div>
+</main>
+<dialog id="save-dialog"><h2>儲存圖表</h2><p>選擇輸出格式：</p><div class="button-row"><button id="save-png">PNG 圖片</button><button id="save-svg">SVG 圖片</button><button id="save-pdf">PDF（列印）</button><button id="cancel-save">取消</button></div></dialog>
+<dialog id="convergence"><div class="dialog-head"><h2>收斂速度分析</h2><button id="close-dialog" aria-label="關閉收斂分析">✕</button></div><p>各母體分佈的 KS 距離隨 n 的變化（越低越像常態） · 每組 N=3000</p><p id="progress" role="status">準備運算…</p><div id="convergence-plot"></div><p class="note">曲線可能因抽樣誤差起伏。柯西與中位數及 IQR 配適的常態比較，其餘使用理論常態。斜率與抽樣誤差尺度僅供探索，不是收斂速度的保證或 KS 下界。</p></dialog>
+</body></html>
